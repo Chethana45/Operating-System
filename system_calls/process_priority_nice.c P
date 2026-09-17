@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main()
+{
+    pid_t p1, p2;
+
+    p1 = fork();
+
+    if (p1 == 0)
+    {
+        nice(5);
+
+        printf("Child 1 process started\n");
+
+        for (long long i = 0; i < 1000000000LL; i++);
+
+        printf("Child 1 process finished successfully\n");
+        exit(0);
+    }
+
+    p2 = fork();
+
+    if (p2 == 0)
+    {
+        nice(15);
+
+        printf("Child 2 process started\n");
+
+        for (long long i = 0; i < 1000000000LL; i++);
+
+        printf("Child 2 process finished successfully\n");
+        exit(0);
+    }
+
+    wait(NULL);
+    wait(NULL);
+
+    printf("Both children completed\n");
+
+    return 0;
+}
