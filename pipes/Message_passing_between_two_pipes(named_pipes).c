@@ -1,1 +1,39 @@
 
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main(){
+        int n=5;
+        int fd;
+        int a[5] ,sum=0;
+        mkfifo("p1",0666);
+        pid_t pid;
+        pid=fork();
+        if(pid==0){
+                fd=open("p1",O_RDONLY);
+                read(fd,a,sizeof(a));
+                close(fd);
+                for(int i=0;i<n;i++){
+                        sum+=a[i];
+                }
+                fd=open("p1",O_WRONLY);
+                write(fd,&sum,sizeof(sum));
+                close(fd);
+        }
+        else{
+                fd=open("p1",O_WRONLY);
+                printf("Enter:");
+                for(int i=0;i<n;i++){
+                        scanf("%d",&a[i]);
+                }
+                write(fd,a,sizeof(a));
+                close(fd);
+                fd=open("p1",O_RDONLY);
+                read(fd,&sum,sizeof(sum));
+                printf("sum:%d\n",sum);
+                close(fd);
+                wait(NULL);
+                unlink("p1");
+        }}
+
