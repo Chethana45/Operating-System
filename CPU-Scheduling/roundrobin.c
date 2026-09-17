@@ -1,3 +1,6 @@
+#include <stdio.h>
+
+// Function for Round Robin Scheduling
 void find_round_robin(int n, int at[], int bt[], int tq, int wt[], int tat[]) {
     int rt[10], ct[10];
     int queue[100], front = 0, rear = 0;
@@ -72,4 +75,46 @@ void find_round_robin(int n, int at[], int bt[], int tq, int wt[], int tat[]) {
             }
         }
     }
+}
+
+// Function to print results and averages
+void print_results(int n, int at[], int bt[], int wt[], int tat[], char* title) {
+    printf("\n--- %s ---\n", title);
+    printf("PID\tArrival\tBurst\tWaiting\tTurnaround\n");
+    
+    float total_wt = 0, total_tat = 0;
+    for (int i = 0; i < n; i++) {
+        total_wt += wt[i];
+        total_tat += tat[i];
+        printf("%d\t%d\t%d\t%d\t%d\n", i + 1, at[i], bt[i], wt[i], tat[i]);
+    }
+    printf("Average Waiting Time: %.2f\n", total_wt / n);
+    printf("Average Turnaround Time: %.2f\n", total_tat / n);
+}
+
+int main() {
+    int n, tq, i;
+    int at[10], bt[10];
+    int wt[10], tat[10];
+
+    printf("Enter number of processes (max 10): ");
+    scanf("%d", &n);
+
+    // Input Arrival Time and Burst Time
+    for (i = 0; i < n; i++) {
+        printf("\nProcess %d:\n", i + 1);
+        printf("Arrival Time: ");
+        scanf("%d", &at[i]);
+        printf("Burst Time: ");
+        scanf("%d", &bt[i]);
+    }
+
+    printf("Enter Time Quantum: ");
+    scanf("%d", &tq);
+
+    // Run Round Robin Scheduling
+    find_round_robin(n, at, bt, tq, wt, tat);
+    print_results(n, at, bt, wt, tat, "Round Robin Scheduling");
+
+    return 0;
 }
